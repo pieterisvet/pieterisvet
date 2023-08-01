@@ -1,0 +1,15 @@
+const EC = require('elliptic').ec;
+const ec = new EC('secp256k1');
+
+const myKey = ec.genKeyPair();
+console.log('Public key:', myKey.getPublic('hex'));
+console.log('Private key:', myKey.getPrivate('hex'));
+const {Blockchain, Transaction} = require('savjeecoin');
+
+const myChain = new Blockchain();
+// Transfer 100 coins from my wallet to "toAddress"
+const tx = new Transaction(myKey.getPublic('hex'), 'toAddress', 100);
+tx.sign(myKey);
+
+myChain.addTransaction(tx);
+myChain.minePendingTransactions(myKey.getPublic('hex'));
